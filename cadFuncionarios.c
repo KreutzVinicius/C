@@ -10,7 +10,7 @@ struct reg{
 typedef struct reg funcionario;
 
 void mostraMenu();
-void definirTamanho (funcionario *func);
+funcionario * definirTamanho (funcionario *func);
 void imprimeTodos(funcionario *func);
 void imprimePos(funcionario *func, int pos);
 int maiorSalario(funcionario *func);
@@ -32,7 +32,7 @@ int main(){
 		scanf("%d",&op);
 		switch(op){
 			case 1:
-                definirTamanho(func);
+                func = definirTamanho(func);
 				break;
 			case 2:
 				imprimeTodos(func);
@@ -92,13 +92,15 @@ void mostraMenu(){
 	printf("| 0 - SAIR                           |\n");
 	printf("|------------------------------------|\n");
 }
-void definirTamanho (funcionario *func){
+funcionario * definirTamanho (funcionario *func){
     printf("Digite quantos funcionarios deseja criar\n");
     scanf("%d", &tam);
 
     func= (funcionario *) malloc(tam * sizeof(funcionario));
 
     func = inserirFuncionarios(func);
+
+	return func;
 }
 
 void imprimeTodos(funcionario *func){
@@ -168,11 +170,11 @@ funcionario * adicionarFuncionario (funcionario *func){
     func =(funcionario *) realloc(func, tam * sizeof(funcionario));
     
         printf("Digite o codigo:\n");
-        scanf("%d",&func[tam].cod);
+        scanf("%d",&func[tam -1].cod);
         printf("Digite o nome:\n");
-        scanf("%s",&func[tam].nome);
+        scanf("%s",&func[tam -1].nome);
         printf("Digite o salario:\n");
-        scanf("%f",&func[tam].salario);
+        scanf("%f",&func[tam -1].salario);
 
 	return func;
 }
