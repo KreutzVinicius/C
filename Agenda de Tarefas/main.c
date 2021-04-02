@@ -36,7 +36,6 @@ int main(){
 				carregaArquivo(lista);
 				break;
 			case 6:
-                printf("1");
 				escreveArquivo(lista);
 				break;
             case 7:

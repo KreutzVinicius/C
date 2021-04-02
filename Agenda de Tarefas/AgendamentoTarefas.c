@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "AgendamentoTarefas.h"
 
 void mostraMenu(){
@@ -149,35 +150,35 @@ void imprimeTempo (tempo horario){
 }
 
 tarefa * carregaArquivo ( tarefa *lista){
-    char Linha[100];
-    char *result;
-    int i;
     tarefa *mov;
 
-    arq = fopen("arq.txt", "r");
+      if((arq = fopen( "arq.txt" , "rb" )) == NULL){
+        printf("Erro na abertura do arquivo");
+            exit(1);    
+    }
     clearerr(arq);
 
-
-    if (arq == NULL)  { //se ouve erro na leitura
-        printf("Problemas na abertura do arquivo\n");
-     return;
-    }
     while (1){
         tarefa *novo;
         novo = (tarefa*)malloc(sizeof(tarefa));
-        fread(novo->id, sizeof(int),1,arq);
+        // fread(&novo, sizeof(novo), 1, arq);
+
+        // if(fread(&novo, sizeof(novo), 1, arq) != 1)
+        //     printf("Erro na leitura do arquivo");
+
+        fread(&novo->id, sizeof(int),1,arq);
         fread(novo->dados.nome, strlen(lista->dados.nome)+1,1,arq);
-        fread(novo->dados.inicio.dia, sizeof(int),1,arq);
-        fread(novo->dados.inicio.mes, sizeof(int),1,arq);
-        fread(novo->dados.inicio.ano, sizeof(int),1,arq);
-        fread(novo->dados.inicio.hora, sizeof(int),1,arq);
-        fread(novo->dados.inicio.minuto, sizeof(int),1,arq);
-        fread(novo->dados.duracao, sizeof(int),1,arq);
-        fread(novo->dados.deadline.dia, sizeof(int),1,arq);
-        fread(novo->dados.deadline.mes, sizeof(int),1,arq);
-        fread(novo->dados.deadline.ano, sizeof(int),1,arq);
-        fread(novo->dados.deadline.hora, sizeof(int),1,arq);
-        fread(novo->dados.deadline.minuto, sizeof(int),1,arq);
+        fread(&novo->dados.inicio.dia, sizeof(int),1,arq);
+        fread(&novo->dados.inicio.mes, sizeof(int),1,arq);
+        fread(&novo->dados.inicio.ano, sizeof(int),1,arq);
+        fread(&novo->dados.inicio.hora, sizeof(int),1,arq);
+        fread(&novo->dados.inicio.minuto, sizeof(int),1,arq);
+        fread(&novo->dados.duracao, sizeof(int),1,arq);
+        fread(&novo->dados.deadline.dia, sizeof(int),1,arq);
+        fread(&novo->dados.deadline.mes, sizeof(int),1,arq);
+        fread(&novo->dados.deadline.ano, sizeof(int),1,arq);
+        fread(&novo->dados.deadline.hora, sizeof(int),1,arq);
+        fread(&novo->dados.deadline.minuto, sizeof(int),1,arq);
 
         if (lista != NULL){
             mov=lista;
@@ -185,10 +186,13 @@ tarefa * carregaArquivo ( tarefa *lista){
             mov = mov->prox;
         }
         mov->prox = novo;
+        }else{
+            lista = novo;
         }
         if(feof(arq) ) {
             break;
         }
+        break;
     }
     free (mov);
     fclose(arq);
@@ -196,43 +200,34 @@ tarefa * carregaArquivo ( tarefa *lista){
 }
 
 void escreveArquivo (tarefa *lista){
-    printf("1");
- arq = fopen( "arq.txt" , "w" );
-printf("1");
- tarefa *p;
+    if((arq = fopen( "arq.txt" , "wb" )) == NULL){
+        printf("Erro na abertura do arquivo");
+            exit(1);    
+    }
+    tarefa *p;
     p = lista;
-printf("1");
     while(p!=NULL){
-        printf("1");
-        fwrite(p->id, sizeof(int),1,arq);
-        fwrite(p->dados.nome, strlen(lista->dados.nome)+1,1,arq);
-        fwrite(p->dados.inicio.dia, sizeof(int),1,arq);
-        fwrite(p->dados.inicio.mes, sizeof(int),1,arq);
-        fwrite(p->dados.inicio.ano, sizeof(int),1,arq);
-        fwrite(p->dados.inicio.hora, sizeof(int),1,arq);
-        fwrite(p->dados.inicio.minuto, sizeof(int),1,arq);
-        fwrite(p->dados.duracao, sizeof(int),1,arq);
-        fwrite(p->dados.deadline.dia, sizeof(int),1,arq);
-        fwrite(p->dados.deadline.mes, sizeof(int),1,arq);
-        fwrite(p->dados.deadline.ano, sizeof(int),1,arq);
-        fwrite(p->dados.deadline.hora, sizeof(int),1,arq);
-        fwrite(p->dados.deadline.minuto, sizeof(int),1,arq);
+
+        if( fwrite(&p, sizeof(p), 1,arq) != 1)
+            printf("Erro na leitura do arquivo");
+       
+
+        // fwrite(&p->id, sizeof(int), 1 ,arq);
+        // fwrite(p->dados.nome, strlen(lista->dados.nome)+1,1,arq);
+        // fwrite(&p->dados.inicio.dia, sizeof(int),1,arq);
+        // fwrite(&p->dados.inicio.mes, sizeof(int),1,arq);
+        // fwrite(&p->dados.inicio.ano, sizeof(int),1,arq);
+        // fwrite(&p->dados.inicio.hora, sizeof(int),1,arq);
+        // fwrite(&p->dados.inicio.minuto, sizeof(int),1,arq);
+        // fwrite(&p->dados.duracao, sizeof(int),1,arq);
+        // fwrite(&p->dados.deadline.dia, sizeof(int),1,arq);
+        // fwrite(&p->dados.deadline.mes, sizeof(int),1,arq);
+        // fwrite(&p->dados.deadline.ano, sizeof(int),1,arq);
+        // fwrite(&p->dados.deadline.hora, sizeof(int),1,arq);
+        // fwrite(&p->dados.deadline.minuto, sizeof(int),1,arq);
         
         p = p->prox;
         }
         fclose(arq);
         return;
 }
-
-
-
-/* i = 1;
-  while (!feof(arq))
-  {
-	// Lê uma linha (inclusive com o '\n')
-      result = fgets(Linha, 100, arq);  // o 'fgets' lê até 99 caracteres ou até o '\n'
-      if (result)  // Se foi possível ler
-	  printf("Linha %d : %s",i,Linha);
-      i++;
-  }
-  fclose(arq);*/
