@@ -152,79 +152,78 @@ void imprimeTempo (tempo horario){
 tarefa * carregaArquivo ( tarefa *lista){
     tarefa *mov;
 
-      if((arq = fopen( "arq.txt" , "rb" )) == NULL){
+    if((arq = fopen( "arq.txt" , "rt" )) == NULL){
         printf("Erro na abertura do arquivo");
             exit(1);    
     }
-    clearerr(arq);
 
-    while (1){
-        tarefa *novo;
-        novo = (tarefa*)malloc(sizeof(tarefa));
-        // fread(&novo, sizeof(novo), 1, arq);
+    tarefa *novo,aux;
+  
 
-        // if(fread(&novo, sizeof(novo), 1, arq) != 1)
-        //     printf("Erro na leitura do arquivo");
+    while(fscanf(arq,"%d %s %d %d %d %d %d %d %d %d %d %d %d",&aux.id,aux.dados.nome,&aux.dados.inicio.ano,&aux.dados.inicio.dia,&aux.dados.inicio.hora,&aux.dados.inicio.mes,&aux.dados.inicio.minuto,&aux.dados.duracao,&aux.dados.deadline.minuto,&aux.dados.deadline.mes,&aux.dados.deadline.hora,&aux.dados.deadline.dia,&aux.dados.deadline.ano) == 13) { 
+        if (lista == NULL){
+        lista = (tarefa*)malloc(sizeof(tarefa));
+        lista->id = aux.id ;
+        strcpy(lista->dados.nome,aux.dados.nome);
+        lista->dados.inicio.dia = aux.dados.inicio.dia;
+        lista->dados.inicio.mes = aux.dados.inicio.mes;
+        lista->dados.inicio.ano = aux.dados.inicio.ano;
+        lista->dados.inicio.hora = aux.dados.inicio.hora;
+        lista->dados.inicio.minuto = aux.dados.inicio.minuto;
+        lista->dados.duracao = aux.dados.duracao;
+        lista->dados.deadline.dia = aux.dados.deadline.dia;
+        lista->dados.deadline.mes = aux.dados.deadline.mes;
+        lista->dados.deadline.ano = aux.dados.deadline.ano;
+        lista->dados.deadline.hora = aux.dados.deadline.hora;
+        lista->dados.deadline.minuto = aux.dados.deadline.minuto;
+        
+        lista->prox = NULL;
 
-        fread(&novo->id, sizeof(int),1,arq);
-        fread(novo->dados.nome, strlen(lista->dados.nome)+1,1,arq);
-        fread(&novo->dados.inicio.dia, sizeof(int),1,arq);
-        fread(&novo->dados.inicio.mes, sizeof(int),1,arq);
-        fread(&novo->dados.inicio.ano, sizeof(int),1,arq);
-        fread(&novo->dados.inicio.hora, sizeof(int),1,arq);
-        fread(&novo->dados.inicio.minuto, sizeof(int),1,arq);
-        fread(&novo->dados.duracao, sizeof(int),1,arq);
-        fread(&novo->dados.deadline.dia, sizeof(int),1,arq);
-        fread(&novo->dados.deadline.mes, sizeof(int),1,arq);
-        fread(&novo->dados.deadline.ano, sizeof(int),1,arq);
-        fread(&novo->dados.deadline.hora, sizeof(int),1,arq);
-        fread(&novo->dados.deadline.minuto, sizeof(int),1,arq);
+        }else {        
+            novo = (tarefa*)malloc(sizeof(tarefa));
+            novo->id = aux.id ;
+            strcpy(novo->dados.nome,aux.dados.nome);
+            novo->dados.inicio.dia = aux.dados.inicio.dia;
+            novo->dados.inicio.mes = aux.dados.inicio.mes;
+            novo->dados.inicio.ano = aux.dados.inicio.ano;
+            novo->dados.inicio.hora = aux.dados.inicio.hora;
+            novo->dados.inicio.minuto = aux.dados.inicio.minuto;
+            novo->dados.duracao = aux.dados.duracao;
+            novo->dados.deadline.dia = aux.dados.deadline.dia;
+            novo->dados.deadline.mes = aux.dados.deadline.mes;
+            novo->dados.deadline.ano = aux.dados.deadline.ano;
+            novo->dados.deadline.hora = aux.dados.deadline.hora;
+            novo->dados.deadline.minuto = aux.dados.deadline.minuto;
 
-        if (lista != NULL){
             mov=lista;
-        while(mov->prox != NULL){
-            mov = mov->prox;
+            while(mov->prox != NULL){
+                mov = mov->prox;
+            }
+            mov->prox = novo;
+            novo->prox = NULL;  
         }
-        mov->prox = novo;
-        }else{
-            lista = novo;
-        }
-        if(feof(arq) ) {
+            
+
+        if(feof(arq)) {
             break;
         }
-        break;
     }
-    free (mov);
     fclose(arq);
     return(lista);
 }
 
+
 void escreveArquivo (tarefa *lista){
-    if((arq = fopen( "arq.txt" , "wb" )) == NULL){
+    if((arq = fopen( "arq.txt" , "wt" )) == NULL){
         printf("Erro na abertura do arquivo");
             exit(1);    
     }
     tarefa *p;
     p = lista;
+
     while(p!=NULL){
-
-        if( fwrite(&p, sizeof(p), 1,arq) != 1)
-            printf("Erro na leitura do arquivo");
-       
-
-        // fwrite(&p->id, sizeof(int), 1 ,arq);
-        // fwrite(p->dados.nome, strlen(lista->dados.nome)+1,1,arq);
-        // fwrite(&p->dados.inicio.dia, sizeof(int),1,arq);
-        // fwrite(&p->dados.inicio.mes, sizeof(int),1,arq);
-        // fwrite(&p->dados.inicio.ano, sizeof(int),1,arq);
-        // fwrite(&p->dados.inicio.hora, sizeof(int),1,arq);
-        // fwrite(&p->dados.inicio.minuto, sizeof(int),1,arq);
-        // fwrite(&p->dados.duracao, sizeof(int),1,arq);
-        // fwrite(&p->dados.deadline.dia, sizeof(int),1,arq);
-        // fwrite(&p->dados.deadline.mes, sizeof(int),1,arq);
-        // fwrite(&p->dados.deadline.ano, sizeof(int),1,arq);
-        // fwrite(&p->dados.deadline.hora, sizeof(int),1,arq);
-        // fwrite(&p->dados.deadline.minuto, sizeof(int),1,arq);
+        fprintf(arq, "%d %s %d %d %d %d %d %d %d %d %d %d %d \n", p->id,p->dados.nome,p->dados.inicio.dia,p->dados.inicio.mes,p->dados.inicio.ano,p->dados.inicio.hora,p->dados.inicio.minuto,p->dados.duracao,p->dados.deadline.dia,p->dados.deadline.mes,p->dados.deadline.ano,p->dados.deadline.hora,p->dados.deadline.minuto);
+        printf("%s",p->dados.nome);
         
         p = p->prox;
         }

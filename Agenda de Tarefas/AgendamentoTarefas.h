@@ -17,7 +17,7 @@ typedef struct Tarefa tarefa;
 struct Tarefa{
     int id;
     data dados;
-    tarefa * prox;
+    tarefa *prox;
 };
 
 void mostraMenu(); 

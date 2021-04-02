@@ -33,7 +33,7 @@ int main(){
                 lista = editaTarefa (lista, id);
 				break;
 			case 5:
-				carregaArquivo(lista);
+				lista = carregaArquivo(lista);
 				break;
 			case 6:
 				escreveArquivo(lista);
