@@ -222,9 +222,98 @@ void escreveArquivo (tarefa *lista){
     p = lista;
 
     while(p!=NULL){
+        fprintf(arq, "%d %s %d %d %d %d %d %d %d %d %d %d %d \n", p->id,p->dados.nome,p->dados.inicio.dia,p->dados.inicio.mes,p->dados.inicio.ano,p->dados.inicio.hora,p->dados.inicio.minuto,p->dados.duracao,p->dados.deadline.dia,p->dados.deadline.mes,p->dados.deadline.ano,p->dados.deadline.hora,p->dados.deadline.minuto);   
+        p = p->prox;
+        }
+        fclose(arq);
+        return;
+}
+
+tarefa * computaAgenda (tarefa *lista){
+    tarefa *p= NULL, *agenda= NULL, *novo= NULL, *mov= NULL;
+    char data1[12], data2[12] = "999999999999";
+    p = lista;
+    int cargaHoraria = 480; //480 minutos = 8 horas
+    if (p != NULL){
+        while (cargaHoraria > 0){
+            while (p->prox != NULL){
+                sprintf(data1, "%d%d%d%d%d",p->dados.deadline.ano, p->dados.deadline.mes, p->dados.deadline.dia, p->dados.deadline.hora,p->dados.deadline.minuto); 
+                if (strcmp(data1,data2) < 0){
+                    strcpy(data2,data1);
+                }
+                p = p->prox;
+            } 
+                p = lista;
+                while (p != NULL){
+                    sprintf(data1, "%d%d%d%d%d",p->dados.deadline.ano, p->dados.deadline.mes, p->dados.deadline.dia, p->dados.deadline.hora,p->dados.deadline.minuto);
+                    if (strcmp(data1,data2) == 0){
+                        cargaHoraria = cargaHoraria - p->dados.duracao;
+                        if (agenda == NULL){
+
+                            agenda = (tarefa*)malloc(sizeof(tarefa));
+                            agenda->id = p->id ;
+                            strcpy(agenda->dados.nome,p->dados.nome);
+                            agenda->dados.inicio.dia = p->dados.inicio.dia;
+                            agenda->dados.inicio.mes = p->dados.inicio.mes;
+                            agenda->dados.inicio.ano = p->dados.inicio.ano;
+                            agenda->dados.inicio.hora = p->dados.inicio.hora;
+                            agenda->dados.inicio.minuto = p->dados.inicio.minuto;
+                            agenda->dados.duracao = p->dados.duracao;
+                            agenda->dados.deadline.dia = p->dados.deadline.dia;
+                            agenda->dados.deadline.mes = p->dados.deadline.mes;
+                            agenda->dados.deadline.ano = p->dados.deadline.ano;
+                            agenda->dados.deadline.hora = p->dados.deadline.hora;
+                            agenda->dados.deadline.minuto = p->dados.deadline.minuto;
+                            
+                            agenda->prox = NULL;
+                            
+                            p = removerTarefa(lista, agenda->id);
+                            
+                        }else {
+
+                            novo = (tarefa*)malloc(sizeof(tarefa));
+                            novo->id = p->id ;
+                            strcpy(novo->dados.nome,p->dados.nome);
+                            novo->dados.inicio.dia = p->dados.inicio.dia;
+                            novo->dados.inicio.mes = p->dados.inicio.mes;
+                            novo->dados.inicio.ano = p->dados.inicio.ano;
+                            novo->dados.inicio.hora = p->dados.inicio.hora;
+                            novo->dados.inicio.minuto = p->dados.inicio.minuto;
+                            novo->dados.duracao = p->dados.duracao;
+                            novo->dados.deadline.dia = p->dados.deadline.dia;
+                            novo->dados.deadline.mes = p->dados.deadline.mes;
+                            novo->dados.deadline.ano = p->dados.deadline.ano;
+                            novo->dados.deadline.hora = p->dados.deadline.hora;
+                            novo->dados.deadline.minuto = p->dados.deadline.minuto;
+
+                            mov = agenda;
+                            while (mov->prox != NULL){
+                            mov = mov->prox;
+                            }
+                            mov->prox = novo;
+                            novo->prox = NULL;
+                            p = removerTarefa(lista, novo->id);
+                        }
+                    } 
+                        p = p->prox;   
+                }
+        }
+        return(agenda);
+    } else printf("nao existem tarefas para serem concluidas");
+
+    return 0;
+}
+
+void escreveDiarias (tarefa *lista){
+    if((arq = fopen( "arqDiarias.txt" , "wt" )) == NULL){
+        printf("Erro na abertura do arquivo");
+            exit(1);    
+    }
+    tarefa *p;
+    p = lista;
+
+    while(p!=NULL){
         fprintf(arq, "%d %s %d %d %d %d %d %d %d %d %d %d %d \n", p->id,p->dados.nome,p->dados.inicio.dia,p->dados.inicio.mes,p->dados.inicio.ano,p->dados.inicio.hora,p->dados.inicio.minuto,p->dados.duracao,p->dados.deadline.dia,p->dados.deadline.mes,p->dados.deadline.ano,p->dados.deadline.hora,p->dados.deadline.minuto);
-        printf("%s",p->dados.nome);
-        
         p = p->prox;
         }
         fclose(arq);

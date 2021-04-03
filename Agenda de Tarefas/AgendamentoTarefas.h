@@ -7,7 +7,7 @@ struct Tempo{
 
 typedef struct reg data;
 struct reg{
-	char nome[60];
+	char nome[30];
 	tempo inicio;
     int duracao;
     tempo deadline;
@@ -32,5 +32,7 @@ tarefa * libera_lst(tarefa *l);
 void imprimeTempo (tempo horario);
 tarefa  * carregaArquivo (tarefa *lista);
 void escreveArquivo (tarefa *lista);
+tarefa * computaAgenda  (tarefa *lista);
+void escreveDiarias (tarefa *lista);
 
 FILE *arq;

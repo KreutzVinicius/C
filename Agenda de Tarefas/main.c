@@ -6,7 +6,7 @@ int main(){
 
 	int op,i,tmp,id;
 
-    tarefa *lista;
+    tarefa *lista, *diarias;
     lista = inicializa (lista);
     
 
@@ -39,10 +39,10 @@ int main(){
 				escreveArquivo(lista);
 				break;
             case 7:
-                //computar a agenda do dia
+                diarias = computaAgenda(lista);
                 break;
             case 8:
-                //salvar a agenda do dia
+                escreveDiarias (diarias);
                 break;
 			case 0:
 				printf("Obrigado por usar o nosso programa!\n"); 
@@ -51,7 +51,6 @@ int main(){
 
 			default:
 				printf("OPCAO NAO CADASTRADA!\n"); 
-                fclose(arq);
 				system("pause");
 				break;
 
