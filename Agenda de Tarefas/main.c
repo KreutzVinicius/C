@@ -18,7 +18,15 @@ int main(){
                 lista = adicionarTarefa(lista);
 				break;
 			case 2:
+				printf("\n1- imprime todas tarefas\n2- imprime tarefas do dia");
+				scanf ("%d", op);
+				if (op == 1){
 				imprimeTodos(lista);
+				}else{
+					if (op==2){
+						imprimeTodos(diarias);
+					}else printf("Opção invalida");
+				}
 				break;
 			case 3:
                 imprimeTodos(lista);
