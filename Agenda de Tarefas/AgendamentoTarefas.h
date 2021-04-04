@@ -34,5 +34,8 @@ tarefa  * carregaArquivo (tarefa *lista);
 void escreveArquivo (tarefa *lista);
 tarefa * computaAgenda  (tarefa *lista);
 void escreveDiarias (tarefa *lista);
+tarefa * merge(tarefa *e, tarefa *d);
+tarefa * split (tarefa *l);
+tarefa * mergeSort(tarefa * l);
 
 FILE *arq;

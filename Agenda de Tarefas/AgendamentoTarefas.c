@@ -230,78 +230,22 @@ void escreveArquivo (tarefa *lista){
 }
 
 tarefa * computaAgenda (tarefa *lista){
-    tarefa *p= NULL, *agenda= NULL, *novo= NULL, *mov= NULL;
+    tarefa *p= NULL, *agenda= NULL;
     char data1[12], data2[12] = "999999999999";
-    p = lista;
     int cargaHoraria = 480; //480 minutos = 8 horas
-    if (p != NULL){
-        while (cargaHoraria > 0){
-            while (p->prox != NULL){
-                sprintf(data1, "%d%d%d%d%d",p->dados.deadline.ano, p->dados.deadline.mes, p->dados.deadline.dia, p->dados.deadline.hora,p->dados.deadline.minuto); 
-                if (strcmp(data1,data2) < 0){
-                    strcpy(data2,data1);
-                }
-                p = p->prox;
-            } 
-                p = lista;
-                while (p != NULL){
-                    sprintf(data1, "%d%d%d%d%d",p->dados.deadline.ano, p->dados.deadline.mes, p->dados.deadline.dia, p->dados.deadline.hora,p->dados.deadline.minuto);
-                    if (strcmp(data1,data2) == 0){
-                        cargaHoraria = cargaHoraria - p->dados.duracao;
-                        if (agenda == NULL){
+    if (lista != NULL){
+        agenda = mergeSort(lista);
+        p = agenda;
+        do{
+            cargaHoraria = cargaHoraria - p->dados.duracao;
+            if (cargaHoraria <= 0) p->prox = NULL;
+            p = p->prox;
+        }while (cargaHoraria > 0 && p != NULL);
+        
+        
+    }else printf("nao existem tarefas para serem concluidas");
 
-                            agenda = (tarefa*)malloc(sizeof(tarefa));
-                            agenda->id = p->id ;
-                            strcpy(agenda->dados.nome,p->dados.nome);
-                            agenda->dados.inicio.dia = p->dados.inicio.dia;
-                            agenda->dados.inicio.mes = p->dados.inicio.mes;
-                            agenda->dados.inicio.ano = p->dados.inicio.ano;
-                            agenda->dados.inicio.hora = p->dados.inicio.hora;
-                            agenda->dados.inicio.minuto = p->dados.inicio.minuto;
-                            agenda->dados.duracao = p->dados.duracao;
-                            agenda->dados.deadline.dia = p->dados.deadline.dia;
-                            agenda->dados.deadline.mes = p->dados.deadline.mes;
-                            agenda->dados.deadline.ano = p->dados.deadline.ano;
-                            agenda->dados.deadline.hora = p->dados.deadline.hora;
-                            agenda->dados.deadline.minuto = p->dados.deadline.minuto;
-                            
-                            agenda->prox = NULL;
-                            
-                            p = removerTarefa(lista, agenda->id);
-                            
-                        }else {
-
-                            novo = (tarefa*)malloc(sizeof(tarefa));
-                            novo->id = p->id ;
-                            strcpy(novo->dados.nome,p->dados.nome);
-                            novo->dados.inicio.dia = p->dados.inicio.dia;
-                            novo->dados.inicio.mes = p->dados.inicio.mes;
-                            novo->dados.inicio.ano = p->dados.inicio.ano;
-                            novo->dados.inicio.hora = p->dados.inicio.hora;
-                            novo->dados.inicio.minuto = p->dados.inicio.minuto;
-                            novo->dados.duracao = p->dados.duracao;
-                            novo->dados.deadline.dia = p->dados.deadline.dia;
-                            novo->dados.deadline.mes = p->dados.deadline.mes;
-                            novo->dados.deadline.ano = p->dados.deadline.ano;
-                            novo->dados.deadline.hora = p->dados.deadline.hora;
-                            novo->dados.deadline.minuto = p->dados.deadline.minuto;
-
-                            mov = agenda;
-                            while (mov->prox != NULL){
-                            mov = mov->prox;
-                            }
-                            mov->prox = novo;
-                            novo->prox = NULL;
-                            p = removerTarefa(lista, novo->id);
-                        }
-                    } 
-                        p = p->prox;   
-                }
-        }
-        return(agenda);
-    } else printf("nao existem tarefas para serem concluidas");
-
-    return 0;
+    return agenda;
 }
 
 void escreveDiarias (tarefa *lista){
@@ -313,9 +257,79 @@ void escreveDiarias (tarefa *lista){
     p = lista;
 
     while(p!=NULL){
-        fprintf(arq, "%d %s %d %d %d %d %d %d %d %d %d %d %d \n", p->id,p->dados.nome,p->dados.inicio.dia,p->dados.inicio.mes,p->dados.inicio.ano,p->dados.inicio.hora,p->dados.inicio.minuto,p->dados.duracao,p->dados.deadline.dia,p->dados.deadline.mes,p->dados.deadline.ano,p->dados.deadline.hora,p->dados.deadline.minuto);
+        fprintf(arq, "%d %s %d %d %d %d %d %d %d %d %d %d %d \n", p->id,p->dados.nome,p->dados.inicio.dia,p->dados.inicio.mes,p->dados.inicio.ano,p->dados.inicio.hora,p->dados.inicio.minuto,p->dados.duracao,p->dados.deadline.dia,p->dados.deadline.mes,p->dados.deadline.ano,p->dados.deadline.hora,p->dados.deadline.minuto);   
         p = p->prox;
         }
         fclose(arq);
         return;
+}
+
+tarefa * merge(tarefa *e, tarefa *d){
+    tarefa *l, *p;
+    l=NULL;
+    char data1[15],data2[15];
+    while(e!=NULL && d!=NULL){
+        sprintf(data1, "%d%d%d%d%d",e->dados.deadline.ano, e->dados.deadline.mes, e->dados.deadline.dia, e->dados.deadline.hora,e->dados.deadline.minuto);
+        sprintf(data2, "%d%d%d%d%d",d->dados.deadline.ano, d->dados.deadline.mes, d->dados.deadline.dia, d->dados.deadline.hora,d->dados.deadline.minuto);
+        if(strcmp(data1,data2) < 0){
+            if(l==NULL) {
+                p=l=e;
+                e=e->prox;
+            } else {
+                p->prox=e;
+                e=e->prox;
+                p=p->prox;
+            }
+        }else{
+            if(l==NULL) {
+                p=l=d;
+                d=d->prox;
+            }else {
+                p->prox=d;
+                d=d->prox;
+                p=p->prox;
+             }
+        }
+    }
+        if(e==NULL){
+        while(d!=NULL){
+            p->prox=d;
+            d=d->prox;
+            p=p->prox;
+        }
+    }
+    if(d==NULL){
+        while(e!=NULL){
+            p->prox=e;
+            e=e->prox;
+            p=p->prox;
+        }
+    }
+    return(l);
+}
+
+tarefa * split (tarefa *l){
+    tarefa *x,*y,*p;
+    x=y=l;
+    if(l==NULL) return(l);
+    while(y->prox!=NULL){
+        y=y->prox;
+        if(y->prox!=NULL){
+            x=x->prox;
+            y=y->prox;
+        }
+    }
+    p=x->prox;
+    x->prox=NULL;
+    return(p);
+}
+
+tarefa * mergeSort(tarefa * l){
+    tarefa *e, *d, *mid;
+    if(l==NULL || l->prox ==NULL) return l;
+    mid=split(l);
+    e = mergeSort(l);
+    d = mergeSort(mid);
+    l=merge(e,d);
+    return(l);
 }
